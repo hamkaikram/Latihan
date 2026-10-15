@@ -186,6 +186,40 @@ const COURSES = [
           ],
         },
       },
+      {
+        title: 'Flexbox',
+        slides: [
+          {
+            title: 'Menyusun elemen sebaris',
+            body: `<p><code>display: flex</code> pada elemen induk membuat anak-anaknya tersusun sebaris:</p>
+<pre>.menu {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}</pre>
+<p><code>justify-content</code> mengatur posisi di sumbu utama, <code>gap</code> mengatur jarak antar-anak.</p>`,
+          },
+          {
+            title: 'Responsif dengan flex-wrap',
+            body: `<p><code>flex-wrap: wrap</code> membuat anak turun ke baris baru saat layar sempit, cocok untuk tampilan HP.</p>`,
+          },
+        ],
+        exercise: {
+          instruction: `Jadikan <code>.menu</code> sebuah flex container dengan <code>justify-content: space-between</code>, <code>gap: 8px</code>, dan <code>flex-wrap: wrap</code>.`,
+          files: [
+            { name: 'index.html', content: '<link rel="stylesheet" href="style.css">\n<nav class="menu">\n  <a href="#">Beranda</a>\n  <a href="#">Kursus</a>\n  <a href="#">Kontak</a>\n</nav>\n' },
+            { name: 'style.css', content: '.menu {\n\n}\n' },
+          ],
+          hints: ['display: flex;', 'justify-content: space-between;', 'gap: 8px; dan flex-wrap: wrap;'],
+          solution: { 'style.css': '.menu {\n  display: flex;\n  justify-content: space-between;\n  gap: 8px;\n  flex-wrap: wrap;\n}\n' },
+          checks: [
+            { desc: 'display: flex', test: ({ doc }) => style(doc, '.menu', 'display') === 'flex' },
+            { desc: 'justify-content: space-between', test: ({ doc }) => style(doc, '.menu', 'justifyContent') === 'space-between' },
+            { desc: 'gap: 8px', test: ({ doc }) => style(doc, '.menu', 'columnGap') === '8px' },
+            { desc: 'flex-wrap: wrap', test: ({ doc }) => style(doc, '.menu', 'flexWrap') === 'wrap' },
+          ],
+        },
+      },
     ],
   },
   {
@@ -288,6 +322,129 @@ if (nilai >= 75) {
           checks: [
             { desc: 'Menggunakan for', test: ({ code }) => /\bfor\s*\(/.test(code['script.js']) },
             { desc: 'Output 1 sampai 5 berurutan', test: ({ logs }) => logs.join(',') === '1,2,3,4,5' },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    id: 'js2',
+    title: 'JavaScript Lanjutan',
+    icon: '🧩',
+    color: '#7c3aed',
+    description: 'Function, array, object, lalu membuat halaman interaktif dengan DOM dan event.',
+    lessons: [
+      {
+        title: 'Function',
+        slides: [
+          {
+            title: 'Membungkus langkah dalam function',
+            body: `<p>Function adalah kumpulan langkah yang bisa dipakai berulang. <code>return</code> mengembalikan hasilnya:</p>
+<pre>function tambah(a, b) {
+  return a + b;
+}
+console.log(tambah(2, 3)); // 5</pre>`,
+          },
+        ],
+        exercise: {
+          instruction: `Buat <code>function luasPersegi(sisi)</code> yang <b>mengembalikan</b> sisi × sisi. Lalu cetak hasil <code>luasPersegi(4)</code>.`,
+          files: [{ name: 'script.js', content: '\n' }],
+          hints: ['function luasPersegi(sisi) { return sisi * sisi; }', 'console.log(luasPersegi(4));'],
+          solution: { 'script.js': 'function luasPersegi(sisi) {\n  return sisi * sisi;\n}\n\nconsole.log(luasPersegi(4));\n' },
+          checks: [
+            { desc: 'Ada function luasPersegi', test: ({ win }) => typeof win.luasPersegi === 'function' },
+            { desc: 'luasPersegi(5) mengembalikan 25', test: ({ win }) => win.luasPersegi(5) === 25 },
+            { desc: 'Mencetak 16', test: ({ logs }) => logs.includes('16') },
+          ],
+        },
+      },
+      {
+        title: 'Array',
+        slides: [
+          {
+            title: 'Menyimpan banyak nilai',
+            body: `<p>Array menyimpan daftar nilai berurutan. Indeks dimulai dari 0:</p>
+<pre>const buah = ["apel", "jeruk"];
+buah.push("mangga");
+console.log(buah[0]);      // apel
+console.log(buah.length);  // 3</pre>`,
+          },
+          {
+            title: 'Menjelajah array',
+            body: `<p><code>for...of</code> mengambil setiap elemen satu per satu:</p>
+<pre>let total = 0;
+for (const n of [1, 2, 3]) {
+  total += n;
+}
+console.log(total); // 6</pre>`,
+          },
+        ],
+        exercise: {
+          instruction: `Hitung <b>total</b> semua isi array <code>nilai</code> dengan perulangan, lalu cetak totalnya.`,
+          files: [{ name: 'script.js', content: 'const nilai = [80, 65, 90, 72];\n\n' }],
+          hints: ['let total = 0;', 'for (const n of nilai) { total += n; }', 'console.log(total);'],
+          solution: { 'script.js': 'const nilai = [80, 65, 90, 72];\n\nlet total = 0;\nfor (const n of nilai) {\n  total += n;\n}\nconsole.log(total);\n' },
+          checks: [
+            { desc: 'Menggunakan perulangan atau reduce', test: ({ code }) => /\bfor\s*\(|\.reduce\(|\.forEach\(/.test(code['script.js']) },
+            { desc: 'Mencetak 307', test: ({ logs }) => logs.includes('307') },
+            { desc: 'Tidak menulis 307 secara langsung', test: ({ code }) => !/307/.test(code['script.js']) },
+          ],
+        },
+      },
+      {
+        title: 'Object',
+        slides: [
+          {
+            title: 'Data dengan nama',
+            body: `<p>Object menyimpan pasangan <b>kunci: nilai</b>:</p>
+<pre>const siswa = {
+  nama: "Rina",
+  kelas: 10,
+};
+console.log(siswa.nama); // Rina</pre>`,
+          },
+        ],
+        exercise: {
+          instruction: `Buat object <code>buku</code> dengan properti <code>judul</code> (teks), <code>penulis</code> (teks), dan <code>tahun</code> (angka). Cetak <code>buku.judul</code>.`,
+          files: [{ name: 'script.js', content: '\n' }],
+          hints: ['const buku = { judul: "Laskar Pelangi", penulis: "Andrea Hirata", tahun: 2005 };', 'console.log(buku.judul);'],
+          solution: { 'script.js': 'const buku = {\n  judul: "Laskar Pelangi",\n  penulis: "Andrea Hirata",\n  tahun: 2005,\n};\n\nconsole.log(buku.judul);\n' },
+          checks: [
+            { desc: 'Object buku punya judul dan penulis', test: ({ code }) => /buku\s*=\s*\{[\s\S]*judul\s*:[\s\S]*\}/.test(code['script.js']) && /penulis\s*:/.test(code['script.js']) },
+            { desc: 'tahun berupa angka', test: ({ code }) => /tahun\s*:\s*\d+/.test(code['script.js']) },
+            { desc: 'Mencetak buku.judul', test: ({ code, logs }) => /console\.log\(\s*buku\.judul\s*\)/.test(code['script.js']) && logs.length > 0 && logs[0] !== 'undefined' },
+          ],
+        },
+      },
+      {
+        title: 'DOM & Event',
+        slides: [
+          {
+            title: 'Mengambil elemen',
+            body: `<p>JavaScript bisa mengubah halaman lewat DOM:</p>
+<pre>const judul = document.getElementById("judul");
+judul.textContent = "Teks baru";</pre>`,
+          },
+          {
+            title: 'Bereaksi pada klik',
+            body: `<p><code>addEventListener</code> menjalankan function saat event terjadi:</p>
+<pre>tombol.addEventListener("click", function () {
+  console.log("diklik");
+});</pre>`,
+          },
+        ],
+        exercise: {
+          instruction: `Saat tombol <code>#tombol</code> diklik, ubah teks <code>#hasil</code> menjadi <b>Diklik!</b>. Coba klik tombolnya di tab Hasil.`,
+          files: [
+            { name: 'index.html', content: '<button id="tombol">Klik saya</button>\n<p id="hasil">Belum diklik</p>\n<script src="script.js"></script>\n' },
+            { name: 'script.js', content: 'const tombol = document.getElementById("tombol");\nconst hasil = document.getElementById("hasil");\n\n' },
+          ],
+          hints: ['tombol.addEventListener("click", function () { ... });', 'hasil.textContent = "Diklik!";'],
+          solution: { 'script.js': 'const tombol = document.getElementById("tombol");\nconst hasil = document.getElementById("hasil");\n\ntombol.addEventListener("click", function () {\n  hasil.textContent = "Diklik!";\n});\n' },
+          checks: [
+            { desc: 'Menggunakan addEventListener("click", ...)', test: ({ code }) => /addEventListener\(\s*["']click["']/.test(code['script.js']) },
+            { desc: 'Teks awal tidak berubah sebelum diklik', test: ({ doc }) => text(doc, '#hasil') === 'Belum diklik' },
+            { desc: 'Setelah diklik, #hasil berisi "Diklik!"', test: ({ doc }) => { $(doc, '#tombol').click(); return text(doc, '#hasil') === 'Diklik!'; } },
           ],
         },
       },

@@ -1,0 +1,97 @@
+// Roadmap belajar web developer, disusun untuk belajar mandiri dari HP.
+// item.course: id kursus di aplikasi ini; item otomatis tercentang saat kursus itu selesai.
+const ROADMAP = [
+  {
+    id: 'persiapan',
+    title: 'Persiapan HP',
+    duration: '1–2 hari',
+    goal: 'Punya alat untuk menulis, menyimpan, dan membagikan kode dari HP.',
+    items: [
+      { id: 'akun-github', label: 'Buat akun GitHub' },
+      { id: 'alat-hp', label: 'Pasang editor kode (mis. Acode) dan Termux untuk terminal di Android' },
+    ],
+    phoneTip: 'Aplikasi ini sudah bisa dipakai untuk tahap 1–3 tanpa alat tambahan. Termux baru wajib mulai tahap 4.',
+  },
+  {
+    id: 'fondasi',
+    title: 'Fondasi Web',
+    duration: '3–4 minggu',
+    goal: 'Mampu membuat halaman statis yang rapi di layar HP maupun laptop.',
+    items: [
+      { id: 'http', label: 'Cara kerja internet, browser, dan HTTP' },
+      { id: 'html', label: 'HTML dan HTML semantik', course: 'html' },
+      { id: 'css', label: 'CSS dasar dan box model', course: 'css' },
+      { id: 'layout', label: 'Flexbox, Grid, dan desain responsif', course: 'css' },
+    ],
+    project: { title: 'Halaman profil/CV responsif', desc: 'Satu halaman tentang dirimu, harus enak dibaca di HP.' },
+    phoneTip: 'Pakai mode desktop/inspect di browser HP untuk melihat hasil di berbagai lebar layar.',
+  },
+  {
+    id: 'js-inti',
+    title: 'Logika & JavaScript Inti',
+    duration: '4–6 minggu',
+    goal: 'Mampu memecah masalah menjadi langkah dan menuliskannya sebagai kode.',
+    items: [
+      { id: 'js-dasar', label: 'Variabel, tipe data, kondisi, perulangan', course: 'js' },
+      { id: 'js-struktur', label: 'Function, array, dan object', course: 'js2' },
+      { id: 'algoritma', label: 'Algoritma dasar: menulis langkah (pseudocode) sebelum kode' },
+      { id: 'debug', label: 'Membaca pesan error dan debugging dengan console.log' },
+    ],
+    project: { title: 'Game tebak angka atau kuis', desc: 'Logika murni: angka acak, input, kondisi, dan skor.' },
+    phoneTip: 'Latihan soal pendek 15 menit per hari lebih efektif daripada sesi panjang yang jarang.',
+  },
+  {
+    id: 'browser',
+    title: 'JavaScript di Browser + Git',
+    duration: '4–6 minggu',
+    goal: 'Membuat halaman interaktif yang mengambil data dan bisa diakses orang lain.',
+    items: [
+      { id: 'dom', label: 'DOM dan event', course: 'js2' },
+      { id: 'storage', label: 'Form dan localStorage' },
+      { id: 'async', label: 'Promise, async/await, fetch, dan JSON' },
+      { id: 'git', label: 'Git dan GitHub, publikasi dengan GitHub Pages' },
+    ],
+    project: { title: 'To-do list + info cuaca', desc: 'Data tersimpan di localStorage, cuaca dari API publik, online di GitHub Pages.' },
+    phoneTip: 'Git bisa dijalankan dari Termux (pkg install git), atau unggah file lewat situs GitHub.',
+  },
+  {
+    id: 'frontend',
+    title: 'Frontend Modern',
+    duration: '4–6 minggu',
+    goal: 'Membangun antarmuka berbasis komponen yang mengonsumsi REST API.',
+    items: [
+      { id: 'npm', label: 'npm, module, dan build tool (Vite)' },
+      { id: 'react', label: 'React: komponen, props, state, effect' },
+      { id: 'rest-client', label: 'Routing dan mengonsumsi REST API' },
+    ],
+    project: { title: 'Katalog produk', desc: 'Frontend toko online: daftar, detail, dan keranjang dari API dummy.' },
+    phoneTip: 'Jalankan Node.js dan Vite di Termux, lalu buka localhost di browser HP.',
+  },
+  {
+    id: 'backend',
+    title: 'Backend & Database',
+    duration: '6–8 minggu',
+    goal: 'Membuat server dan API sendiri dengan data yang tersimpan permanen.',
+    items: [
+      { id: 'node', label: 'Node.js dan Express: membuat REST API' },
+      { id: 'sql', label: 'SQL: SELECT, INSERT, JOIN, relasi (SQLite)' },
+      { id: 'auth', label: 'Autentikasi dan otorisasi (hash password, session/JWT)' },
+    ],
+    project: { title: 'API toko online', desc: 'Produk, keranjang, dan login pengguna.' },
+    phoneTip: 'SQLite cocok untuk HP karena tidak perlu server database terpisah.',
+  },
+  {
+    id: 'produksi',
+    title: 'Siap Produksi',
+    duration: 'Berkelanjutan',
+    goal: 'Kode yang teruji, aman, dan bisa dipakai orang lain.',
+    items: [
+      { id: 'testing', label: 'Testing (unit dan integrasi)' },
+      { id: 'security', label: 'Keamanan web dasar: XSS, SQL injection, OWASP Top 10' },
+      { id: 'oop', label: 'OOP dan prinsip desain (SOLID) saat kode mulai besar' },
+      { id: 'deploy', label: 'Deployment dan hosting' },
+    ],
+    project: { title: 'Toko online full-stack', desc: 'Gabungkan proyek tahap 4 dan 5, lalu online.' },
+    phoneTip: 'Tahap ini masih mungkin dari HP, tetapi laptop akan jauh lebih nyaman.',
+  },
+];

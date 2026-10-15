@@ -2,23 +2,35 @@
 <html lang="id">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#2563eb">
   <title>Latihan Koding</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="topbar">
-    <a href="#/" class="brand">&lt;/&gt; Latihan</a>
-    <div class="stats">
-      <span id="stat-level">Lv 1</span>
-      <span id="stat-xp">0 XP</span>
-    </div>
+    <a href="#/" class="brand">&lt;/&gt;<span class="brand-text"> Latihan</span></a>
+    <nav class="nav">
+      <a href="#/" data-nav="home">Kursus</a>
+      <a href="#/roadmap" data-nav="roadmap">Roadmap</a>
+    </nav>
+    <span class="stats" id="stats">Lv 1 · 0 XP</span>
   </header>
   <main id="app"></main>
 
   <script src="js/courses.js"></script>
+  <script src="js/roadmap.js"></script>
   <script src="js/store.js"></script>
   <script src="js/runner.js"></script>
   <script src="js/app.js"></script>
+  <script>
+    // Mode offline & bisa dipasang di layar utama HP (hanya saat dibuka lewat http/https).
+    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+      navigator.serviceWorker.register('sw.js').catch(() => {});
+    }
+  </script>
 </body>
 </html>
