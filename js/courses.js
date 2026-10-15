@@ -1,11 +1,27 @@
 // Data kursus. Setiap pelajaran berisi slide materi dan satu latihan.
 // checks[].test menerima { doc, win, logs, code } dan mengembalikan true jika lulus.
+// checks[].why (opsional) menerima konteks yang sama dan mengembalikan penjelasan saat gagal.
 const $ = (doc, sel) => doc.querySelector(sel);
 const text = (doc, sel) => ($(doc, sel)?.textContent || '').trim();
 const style = (doc, sel, prop) => {
   const el = $(doc, sel);
   return el ? doc.defaultView.getComputedStyle(el)[prop] : '';
 };
+
+// Cek teks persis sebuah elemen, dengan penjelasan kesalahan yang spesifik.
+const expectText = (sel, label, expected) => ({
+  desc: `Ada elemen ${label} berisi "${expected}" (huruf besar-kecil harus sama)`,
+  test: ({ doc }) => text(doc, sel) === expected,
+  why: ({ doc }) => {
+    if (!$(doc, sel)) return `Belum ada elemen ${label}.`;
+    const actual = text(doc, sel);
+    if (!actual) return `Elemen ${label} masih kosong.`;
+    if (actual.toLowerCase() === expected.toLowerCase()) {
+      return `Huruf besar-kecil berbeda: tertulis "${actual}", seharusnya "${expected}".`;
+    }
+    return `Teksnya "${actual}", seharusnya "${expected}".`;
+  },
+});
 
 const COURSES = [
   {
@@ -37,8 +53,12 @@ const COURSES = [
           hints: ['Tulis <h1>Halo Dunia</h1>', 'Paragraf ditulis dengan <p>...</p>'],
           solution: { 'index.html': '<h1>Halo Dunia</h1>\n<p>Saya sedang belajar HTML.</p>\n' },
           checks: [
-            { desc: 'Ada elemen <h1> berisi "Halo Dunia"', test: ({ doc }) => text(doc, 'h1') === 'Halo Dunia' },
-            { desc: 'Ada elemen <p> yang tidak kosong', test: ({ doc }) => text(doc, 'p').length > 0 },
+            expectText('h1', '<h1>', 'Halo Dunia'),
+            {
+              desc: 'Ada elemen <p> yang tidak kosong',
+              test: ({ doc }) => text(doc, 'p').length > 0,
+              why: ({ doc }) => ($(doc, 'p') ? 'Elemen <p> masih kosong.' : 'Belum ada elemen <p>.'),
+            },
           ],
         },
       },
@@ -66,7 +86,7 @@ const COURSES = [
           },
           checks: [
             { desc: 'Link menuju https://developer.mozilla.org', test: ({ doc }) => /^https:\/\/developer\.mozilla\.org\/?$/.test($(doc, 'a')?.getAttribute('href') || '') },
-            { desc: 'Teks link adalah "MDN"', test: ({ doc }) => text(doc, 'a') === 'MDN' },
+            expectText('a', '<a>', 'MDN'),
             { desc: 'Ada <img> dengan src dan alt', test: ({ doc }) => !!$(doc, 'img[src][alt]') && $(doc, 'img').getAttribute('alt').trim() !== '' },
           ],
         },

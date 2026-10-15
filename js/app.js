@@ -204,6 +204,7 @@ function renderExercise(course, idx) {
     <div>${ex.instruction}</div>
     <h4>Kriteria</h4>
     <ul id="checks">${ex.checks.map((c) => `<li>${escapeHtml(c.desc)}</li>`).join('')}</ul>
+    <div id="feedback"></div>
     <div id="hints"></div>
     <div class="btn-row">
       <button class="btn secondary small" id="hint">Petunjuk</button>
@@ -249,6 +250,7 @@ function renderExercise(course, idx) {
     editor.setRangeText(str, editor.selectionStart, editor.selectionEnd, 'end');
     files[active].content = editor.value;
     persist();
+    clearResults();
   };
   // pointerdown + preventDefault agar keyboard HP tidak tertutup saat tombol simbol ditekan.
   document.querySelectorAll('#keybar button').forEach((b) => {
@@ -267,7 +269,16 @@ function renderExercise(course, idx) {
 
   const persist = () => Store.setCode(course.id, idx, Object.fromEntries(files.map((f) => [f.name, f.content])));
 
-  editor.addEventListener('input', () => { files[active].content = editor.value; persist(); });
+  // Hasil cek lama tidak berlaku lagi setelah kode diubah.
+  let checked = false;
+  const clearResults = () => {
+    if (!checked) return;
+    checked = false;
+    document.getElementById('checks').innerHTML = ex.checks.map((c) => `<li>${escapeHtml(c.desc)}</li>`).join('');
+    document.getElementById('feedback').innerHTML = '<p class="stale">Kode berubah. Tekan <b>Cek Jawaban</b> lagi.</p>';
+  };
+
+  editor.addEventListener('input', () => { files[active].content = editor.value; persist(); clearResults(); });
   editor.addEventListener('keydown', (e) => {
     if (e.key === 'Tab') {
       e.preventDefault();
@@ -287,8 +298,21 @@ function renderExercise(course, idx) {
     const ctx = await run();
     const results = Runner.check(ex, ctx, files);
     if (!results.every((r) => r.pass)) setView('instruksi');
+    checked = true;
     document.getElementById('checks').innerHTML = results
-      .map((r) => `<li class="${r.pass ? 'pass' : 'fail'}">${r.pass ? '✓' : '✗'} ${escapeHtml(r.desc)}</li>`).join('');
+      .map((r) => `<li class="${r.pass ? 'pass' : 'fail'}">${r.pass ? '✓' : '✗'} ${escapeHtml(r.desc)}${
+        r.why ? `<div class="why">→ ${escapeHtml(r.why)}</div>` : ''}</li>`).join('');
+
+    const notes = [];
+    const lint = files.filter((f) => f.name.endsWith('.html')).flatMap((f) => Runner.lintHtml(f.content));
+    if (lint.length) {
+      notes.push(`<div class="warn"><b>⚠ Periksa tag HTML:</b><ul>${lint.map((w) => `<li>${escapeHtml(w)}</li>`).join('')}</ul></div>`);
+    }
+    if (files.some((f) => f.name.endsWith('.js')) && !results.every((r) => r.pass)) {
+      notes.push(`<div class="output-note"><b>Output konsol kamu:</b><pre>${
+        ctx.logs.length ? escapeHtml(ctx.logs.join('\n')) : '(tidak ada output)'}</pre></div>`);
+    }
+    document.getElementById('feedback').innerHTML = notes.join('');
     if (results.every((r) => r.pass)) {
       const firstTime = !Store.isCompleted(course.id, idx);
       Store.complete(course.id, idx);

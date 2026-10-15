@@ -277,6 +277,18 @@ small { color: var(--muted); }
 #checks li { margin: 4px 0; }
 #checks li.pass { color: var(--success); list-style: none; margin-left: -18px; }
 #checks li.fail { color: var(--danger); list-style: none; margin-left: -18px; }
+.why { color: var(--text); font-size: 0.9rem; margin: 2px 0 4px 18px; }
+.warn, .output-note, .stale {
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+.warn { background: rgb(234 179 8 / 0.15); border: 1px solid rgb(234 179 8 / 0.5); }
+.warn ul { margin: 4px 0 0; padding-left: 18px; }
+.output-note { background: var(--bg); }
+.output-note pre { margin: 4px 0 0; white-space: pre-wrap; }
+.stale { background: var(--bg); color: var(--muted); margin-bottom: 0; }
 .hint { background: var(--bg); border-radius: 8px; padding: 8px; margin-top: 8px; font-size: 0.9rem; }
 
 .mobile-tabs { display: none; }
