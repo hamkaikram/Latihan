@@ -1,8 +1,8 @@
 // Network-first: saat online selalu ambil versi terbaru, saat offline pakai salinan terakhir.
-const CACHE = 'latihan-v2';
+const CACHE = 'latihan-v3';
 const ASSETS = [
   './', 'index.html', 'manifest.webmanifest', 'css/style.css',
-  'js/courses.js', 'js/roadmap.js', 'js/store.js', 'js/runner.js', 'js/app.js',
+  'js/courses.js', 'js/roadmap.js', 'js/store.js', 'js/lint.js', 'js/runner.js', 'js/app.js',
   'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png',
 ];
 

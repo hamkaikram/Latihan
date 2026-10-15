@@ -11,7 +11,17 @@ Aplikasi web pelatihan pemrograman bergaya Progate: materi berbentuk slide, lalu
 - Editor multi-file (`index.html`, `style.css`, `script.js`), pratinjau langsung, dan konsol
 - Pengecekan otomatis per kriteria (✓/✗), petunjuk bertahap, lihat jawaban, reset kode
 - Progres, XP, dan level tersimpan di `localStorage`; kode yang sedang ditulis juga tersimpan otomatis
-- Pintasan: `Ctrl/Cmd + Enter` untuk cek jawaban, `Tab` untuk indentasi
+- Pintasan: `Ctrl/Cmd + Enter` untuk cek jawaban, `Ctrl/Cmd + Z` untuk undo, `Tab` untuk indentasi
+
+### Bantuan untuk pemula
+
+- **Penjelasan per kriteria**: setiap ✗ disertai alasan spesifik (huruf besar-kecil, tag belum ditutup, spasi kurang, `return` hilang, dll.)
+- **Error JavaScript dalam bahasa Indonesia**, lengkap dengan nomor baris dan isi baris yang bermasalah
+- **Pemeriksa kode**: tag HTML yang tidak berpasangan, properti/nilai CSS yang salah ketik (dengan saran), selector yang tidak mengenai elemen, kurung yang belum ditutup, kode yang tertulis di dalam komentar
+- **Pengaman perulangan**: perulangan tak berujung dihentikan otomatis dan ditunjukkan barisnya, aplikasi tidak macet
+- **Ramah keyboard HP**: kutip miring “ ” otomatis diganti `"`, bar simbol sesuai jenis file, tombol `</>` untuk menutup tag terakhir, undo per kata, indentasi dan `}` penutup otomatis
+- Petunjuk bertahap (konsep → potongan kode), jawaban ditampilkan untuk dibandingkan tanpa menimpa kode, materi bisa dibaca ulang dari halaman latihan
+- Pemeriksaan berbasis perilaku (mis. kode `if` diuji juga dengan nilai lain), sehingga cara penulisan lain yang benar tetap diterima
 
 ## Menjalankan
 
@@ -33,7 +43,8 @@ index.html       kerangka halaman
 css/style.css    tampilan (mendukung mode gelap & layar ponsel)
 js/courses.js    data kursus, slide, latihan, dan kriteria pengecekan
 js/roadmap.js    tahap roadmap, checklist, proyek, dan tips HP
-js/runner.js     menjalankan kode peserta di iframe & menangkap console.log
+js/lint.js       pemeriksa kode & penerjemah pesan error untuk pemula
+js/runner.js     menjalankan kode peserta di iframe, menangkap console.log/error, pengaman perulangan
 js/store.js      progres/XP di localStorage
 js/app.js        router (hash) dan semua tampilan
 sw.js            service worker (network-first, fallback offline)
@@ -54,15 +65,17 @@ Tambahkan objek ke `lessons` di `js/courses.js`:
     hints: ['petunjuk 1'],
     solution: { 'index.html': 'kode jawaban' },
     checks: [
-      // test menerima { doc, win, logs, code }
-      { desc: 'Ada <h1>', test: ({ doc }) => !!doc.querySelector('h1') },
+      // test menerima { doc, win, logs, errors, code }; why menjelaskan penyebab saat gagal
+      { desc: 'Ada <h1>', test: ({ doc }) => !!doc.querySelector('h1'), why: () => 'Belum ada elemen <h1>.' },
     ],
   },
 }
 ```
 
 - `doc` / `win`: dokumen & window hasil render (untuk cek DOM dan `getComputedStyle`)
-- `logs`: array string hasil `console.log`
+- `logs`: array string hasil `console.log`; `errors`: error JavaScript beserta nomor barisnya
+- `guard: true`: pemeriksaan pengaman yang hanya tampil saat gagal (mis. "jangan tulis hasilnya langsung")
+- Helper siap pakai: `expectText`, `expectLog`, `expectStyle`, `globalVar` (membaca variabel `const`/`let` peserta)
 - `code`: isi file per nama, untuk cek pola sintaks
 
 ## Keterbatasan
